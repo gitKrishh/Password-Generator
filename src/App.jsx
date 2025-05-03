@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect, useRef } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
@@ -8,6 +8,8 @@ function App() {
   const [numberallow, setnumberallow] = useState(false);
   const [spcharallow, setspcharallow] = useState(false);
   const [pass, setpass] = useState("");
+  //useRef hook
+  const passwordRef = useRef(null)
 
   const passGenerator = useCallback(() => {
     let pass = "";
@@ -15,13 +17,23 @@ function App() {
     if (numberallow) str += "0123456789";
     if (spcharallow) str += "!@#$%^&*()-_=+\|[]{};:/?.> ;"
 
-    for (let i = 1; i <= array.length; i++) {
+    for (let i = 1; i <= length; i++) {
       let char = Math.floor(Math.random() * str.length + 1); //math.floor round of the number and math.random generat the random decima number between 0 to 1, and str.length 
-      pass = str.charAt(char); //str.charat(index) return the specific(index) char from the str 
+      pass += str.charAt(char); //str.charat(index) return the specific(index) char from the str 
 
     }
     setpass(pass);
   }, [length, numberallow, spcharallow, setpass])
+
+  const copypasstoclipboard = useCallback(()=>{
+    passwordRef.current?.select();
+    //if we want to select a range then => passwordRef.current?.setselectionrange(0,3);
+   window.navigator.clipboard.writeText(pass) //but the text wont select with this method so we need to useRef\
+  }, [pass])
+
+  useEffect(()=>{
+    passGenerator()
+  }, [length, numberallow, spcharallow, passGenerator])
 
   return (
     <>
@@ -32,10 +44,13 @@ function App() {
               type="text"
               value={pass}
               placeholder='Password'
-              readOnly />
+              className='hi'
+              readOnly
+              ref = {passwordRef} />
 
           </div>
-          <button className='copybutton'>copy</button>
+          <button className='copybutton'
+          onClick={copypasstoclipboard}>copy</button>
         </div>
 
         <div className='bottompannel'>
@@ -49,6 +64,8 @@ function App() {
             onChange={(e) => {
               setlength(e.target.value)
             }}
+            // className='hi'
+          
           />
           <label className='m-5'>length: {length}</label>
           </div>
