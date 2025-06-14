@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect, useRef } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+// import reactLogo from './assets/react.svg'
+// import viteLogo from '/vite.svg'
 import './App.css'
 
 function App() {
@@ -18,16 +18,28 @@ function App() {
     if (spcharallow) str += "!@#$%^&*()-_=+\|[]{};:/?.> ;"
 
     for (let i = 1; i <= length; i++) {
-      let char = Math.floor(Math.random() * str.length + 1); //math.floor round of the number and math.random generat the random decima number between 0 to 1, and str.length 
+      let char = Math.floor(Math.random() * str.length ); //math.floor round of the number and math.random generat the random decima number between 0 to 1, and str.length 
       pass += str.charAt(char); //str.charat(index) return the specific(index) char from the str 
 
     }
+
+//     str = "abcdefghijklmnopqrstuvwxyz"  // length = 26
+// Then:
+
+// Math.random() * str.length
+// = Math.random() * 26
+// = some number between 0.000... to 25.999...
+
     setpass(pass);
   }, [length, numberallow, spcharallow, setpass])
 
   const copypasstoclipboard = useCallback(()=>{
     passwordRef.current?.select();
     //if we want to select a range then => passwordRef.current?.setselectionrange(0,3);
+//     passwordRef is a reference to the input box where the password is displayed.
+// .current gives access to the actual DOM element (input element).
+// ?. is optional chaining, so it won’t throw an error if current is null.
+// .select() selects all text inside the input box — this visually highlights it.
    window.navigator.clipboard.writeText(pass) //but the text wont select with this method so we need to useRef\
   }, [pass])
 
